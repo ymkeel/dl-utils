@@ -9,6 +9,8 @@ mega = Mega()
 m = mega.login(EMAIL, PASS)
 
 
-while CURRENT_SIZE < LIMIT:
-    folder = m.find('vids')
-    m.get_files(folder)
+folder = m.find('vids')
+print(folder)
+# while CURRENT_SIZE < LIMIT:
+#     folder = m.find('vids')
+#     m.get_files(folder)
