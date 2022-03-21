@@ -25,13 +25,6 @@ class Organizar():
         return int(count)
 
     # funcion de ayuda (no ejecutar explicitamnete)
-    def convert_bytes(num):
-        for x in ['bytes', 'KB', 'MB']:
-            if num < 1024.0:
-                return "%3.1f %s" % (num, x)
-            num /= 1024.0
-
-    # funcion de ayuda (no ejecutar explicitamnete)
     def get_size_per_folder(self):
         total = 0
         for file in os.listdir(self.source):
