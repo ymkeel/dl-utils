@@ -1,6 +1,6 @@
 import os, shutil
 
-limit = 295000000 # 300.0 MB
+limit = 335544320 # 320.0 MB
 source = "all"
 destino = "mega"
 
@@ -71,5 +71,7 @@ def to_distribute(source, destino):
             if get_size_per_folder(folder) < limit:
                 shutil.move(file.path, f'{folder}/{file.name}')
 
-create_foders(source, destino)
-to_distribute(source, destino)
+# create_foders(source, destino)
+# to_distribute(source, destino)
+
+print(convert_bytes())
