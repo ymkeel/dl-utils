@@ -1,77 +1,78 @@
 import os, shutil
 
-limit = 335544320 # 320.0 MB
-source = "all"
-destino = "mega"
+# limit = 335544320
+# source = "all"
+# destino = "mega"
+class Organizar():
+    def __init__(self, limit, source, destino):
+        self.limit = limit
+        self.source = source
+        self.destino = destino
 
-# funcion de ayuda (no ejecutar explicitamnete)
-def set_counter():
-    old = open("reg.txt","r")
-    count = old.read()
-    new = open("reg.txt", "w")
-    new.write(str(int(count) + 1))
-    new.close()
-    
-# funcion de ayuda (no ejecutar explicitamnete)
-def get_counter():
-    old = open("reg.txt","r")
-    count = old.read()
-    old.close()
-    return int(count)
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def set_counter(self):
+        old = open("reg.txt","r")
+        count = old.read()
+        new = open("reg.txt", "w")
+        new.write(str(int(count) + 1))
+        new.close()
 
-# funcion de ayuda (no ejecutar explicitamnete)
-def convert_bytes(num):
-    for x in ['bytes', 'KB', 'MB']:
-        if num < 1024.0:
-            return "%3.1f %s" % (num, x)
-        num /= 1024.0
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def get_counter(self):
+        old = open("reg.txt","r")
+        count = old.read()
+        old.close()
+        return int(count)
 
-# funcion de ayuda (no ejecutar explicitamnete)
-def get_size_per_folder(source):
-    total = 0
-    for file in os.listdir(source):
-        file_info = os.stat(os.path.join(source, file))
-        total += int(file_info.st_size)
-    return total
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def convert_bytes(num):
+        for x in ['bytes', 'KB', 'MB']:
+            if num < 1024.0:
+                return "%3.1f %s" % (num, x)
+            num /= 1024.0
 
-# funcion de ayuda (no ejecutar explicitamnete)
-def distr_folders(destino):
-    temps = []    
-    for fl in os.listdir("./"):
-        if fl.startswith(destino):
-            temps.append(os.path.join("./", fl))
-    
-    return sorted(temps)
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def get_size_per_folder(self):
+        total = 0
+        for file in os.listdir(self.source):
+            file_info = os.stat(os.path.join(self.source, file))
+            total += int(file_info.st_size)
+        return total
 
-# funcion de ayuda (no ejecutar explicitamnete)
-def full_path_file(source):
-    with os.scandir(source) as it:
-        list_folder = []
-        for entry in it:
-            list_folder.append(entry)
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def distr_folders(self):
+        temps = []    
+        for fl in os.listdir("./"):
+            if fl.startswith(self.destino):
+                temps.append(os.path.join("./", fl))
 
-    return list_folder
+        return sorted(temps)
 
-def create_foders(source, destino):
-    size_total = get_size_per_folder(source)
-    number_of_folder = int(size_total/limit)
-    
-    while number_of_folder > 0:
-        current_folder = f'{destino}{get_counter()}' 
-        
-        if not os.path.exists(current_folder):
-            os.makedirs(current_folder)
-            set_counter()
-        
-        number_of_folder -= 1
+    # funcion de ayuda (no ejecutar explicitamnete)
+    def full_path_file(self):
+        with os.scandir(self.source) as it:
+            list_folder = []
+            for entry in it:
+                list_folder.append(entry)
 
-def to_distribute(source, destino):
-    for folder in distr_folders(destino):
-        for file in full_path_file(source):
-            if get_size_per_folder(folder) < limit:
-                shutil.move(file.path, f'{folder}/{file.name}')
+        return list_folder
 
-# create_foders(source, destino)
-# to_distribute(source, destino)
+    def create_foders(self):
+        size_total = self.get_size_per_folder(self.source)
+        number_of_folder = int(size_total/self.limit)
 
-print(convert_bytes())
+        while number_of_folder > 0:
+            current_folder = f'{self.destino}{self.get_counter()}' 
+
+            if not os.path.exists(current_folder):
+                os.makedirs(current_folder)
+                self.set_counter()
+
+            number_of_folder -= 1
+
+    def to_distribute(self, source, destino):
+        self.create_foders(self.source, self.destino)
+        for folder in self.distr_folders(self.destino):
+            for file in self.full_path_file(self.source):
+                if self.get_size_per_folder(folder) < self.limit:
+                    shutil.move(file.path, f'{folder}/{file.name}')
